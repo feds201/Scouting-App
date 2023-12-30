@@ -27,6 +27,13 @@ export default function Layout() {
                 }}
             />
             <Drawer.Screen
+                name={"MatchScouting/Settings"}
+                options={{
+                    drawerLabel: 'Settings',
+                    title: "Settings",
+                }}
+            />
+            <Drawer.Screen
                 name="index"
                 options={{
                     drawerItemStyle: { height: 0 },
