@@ -2,6 +2,7 @@ import {Input, Text} from '@rneui/themed';
 import {View} from "react-native";
 import {Button} from "@rneui/base";
 import {useState} from "react";
+import * as SQLite from 'expo-sqlite';
 
 let qualsMatchNumbers:number[] = [];
 let qualsTeamNumbers:number[] = [];
@@ -11,6 +12,8 @@ let semiFinalsMatchNumbers:number[] = [];
 let semiFinalsTeamNumbers:number[] = [];
 let finalsMatchNumbers:number[] = [];
 let finalsTeamNumbers:number[] = [];
+
+const db = SQLite.openDatabase("blue-alliance");
 
 export default function Setup() {
 
@@ -172,4 +175,8 @@ function sortPair(key: number[], list: string[], matchType: string) {
         finalsMatchNumbers = finalsMatchNumbers.concat(tempkey);
         finalsTeamNumbers = finalsTeamNumbers.concat(templist);
     }
+}
+
+function getArrays() {
+
 }

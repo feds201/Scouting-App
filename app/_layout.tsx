@@ -6,14 +6,14 @@ export default function Layout() {
     return (
         <Drawer drawerContent={(props: DrawerContentComponentProps) => <CustomDrawer{...props}/>}>
             <Drawer.Screen
-                name="MatchScouting/Home" // This is the name of the page and must match the url from root
+                name="MatchScouting/Home"
                 options={{
                     drawerLabel: 'Home',
                     title: 'Home',
                 }}
             />
             <Drawer.Screen
-                name="MatchScouting/Template" // This is the name of the page and must match the url from root
+                name="MatchScouting/Template"
                 options={{
                     drawerLabel: 'Templates',
                     title: 'Templates',
