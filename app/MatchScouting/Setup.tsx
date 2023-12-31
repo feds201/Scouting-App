@@ -2,7 +2,8 @@ import {Input, Text} from '@rneui/themed';
 import {View} from "react-native";
 import {Button} from "@rneui/base";
 import {useState} from "react";
-import * as SQLite from 'expo-sqlite';
+import createEventDatabase, {addToEventDatabase, debugPrint, deleteData} from "../../database/eventDatabase";
+
 
 let qualsMatchNumbers:number[] = [];
 let qualsTeamNumbers:number[] = [];
@@ -12,8 +13,6 @@ let semiFinalsMatchNumbers:number[] = [];
 let semiFinalsTeamNumbers:number[] = [];
 let finalsMatchNumbers:number[] = [];
 let finalsTeamNumbers:number[] = [];
-
-const db = SQLite.openDatabase("blue-alliance");
 
 export default function Setup() {
 
@@ -38,6 +37,12 @@ export default function Setup() {
             />
 
             <Button title={"Submit"} onPress={() => {getEventDetailsFromBlueAlliance(requestURL, robotCode.at(0), robotCode.at(1)).then(r => console.log(r))}}/>
+
+            <Text h3 style={{paddingTop: 30}}>Debug Options</Text>
+            <Button title={"Create Database"} onPress={() => createEventDatabase()} containerStyle={{paddingTop: 20}}/>
+            <Button title={"Add to Database"} onPress={() => addToEventDatabase(1, 201, "qm")} containerStyle={{paddingTop: 30}}/>
+            <Button title={"Get from Database"} onPress={() => debugPrint()} containerStyle={{paddingTop: 30}}/>
+            <Button title={"Delete Debug Data"} onPress={() => deleteData()} containerStyle={{paddingTop: 30}}/>
         </View>
     );
 }
@@ -175,8 +180,4 @@ function sortPair(key: number[], list: string[], matchType: string) {
         finalsMatchNumbers = finalsMatchNumbers.concat(tempkey);
         finalsTeamNumbers = finalsTeamNumbers.concat(templist);
     }
-}
-
-function getArrays() {
-
 }
