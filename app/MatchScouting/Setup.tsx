@@ -4,7 +4,7 @@ import {Button} from "@rneui/base";
 import {useState} from "react";
 import createEventDatabase, {addToEventDatabase, debugPrint, deleteData} from "../../database/eventDatabase";
 
-
+//Global Arrays to store the data from Blue Alliance
 let qualsMatchNumbers:number[] = [];
 let qualsTeamNumbers:number[] = [];
 let quarterFinalsMatchNumbers:number[] = [];
@@ -73,6 +73,7 @@ const getEventDetailsFromBlueAlliance = async (requestURL: string, teamColor: st
     //Getting all the match numbers so we can link up the match number to the team number
     //Blue alliance does not put in the order we want but we do know that when we access each field the indexes for both arrays will correspond to eachother
     //The order for the teams arrays and the match number arrays correspond to eachother and will be correct at each index since we access both fields at the same time in the loop
+    //Makes sense? After reading this myself I realized it makes no sense lmaoooo
 
     const qualsMatchNumbers: number[] = [];
     const quarterFinalsMatchNumbers: number[] = [];
@@ -134,6 +135,7 @@ const getEventDetailsFromBlueAlliance = async (requestURL: string, teamColor: st
 
 const matchesSorting = (qmTeams: string[], qfTeams: string[], sfTeams: string[], fTeams: string[], qmNum: number[], qfNum: number[], sfNum: number[], fNum: number[]) => {
     //Warning: let the unnecessarily long code but definitely necessary code (for my own sanity of understanding what im doing) begin
+    //Update: It was not that long or bad. Inefficient? Without a doubt.
     //qmTeams => qmNum, qfTeams => qfNum, sfTeams => sfNum, fTeams => fNum
 
     sortPair(qmNum, qmTeams, "qm");
@@ -141,7 +143,7 @@ const matchesSorting = (qmTeams: string[], qfTeams: string[], sfTeams: string[],
     sortPair(sfNum, sfTeams, "sf");
     sortPair(fNum, fTeams, "f");
 
-    alert("Success!");
+    loadBlueAllianceIntoDatabase();
 
 }
 
@@ -180,4 +182,32 @@ function sortPair(key: number[], list: string[], matchType: string) {
         finalsMatchNumbers = finalsMatchNumbers.concat(tempkey);
         finalsTeamNumbers = finalsTeamNumbers.concat(templist);
     }
+}
+
+function loadBlueAllianceIntoDatabase() {
+    //Just to make sure we actually have a database (the sql command ensures that if there is already one this function will not do anything)
+    createEventDatabase();
+
+    //Load Qualifying matches
+    for(let i = 0; i < qualsMatchNumbers.length; i++) {
+        addToEventDatabase(qualsMatchNumbers[i], qualsTeamNumbers[i], "qm");
+    }
+
+    //Load Quarterfinal matches
+    for(let i = 0; i < quarterFinalsMatchNumbers.length; i++) {
+        addToEventDatabase(quarterFinalsMatchNumbers[i], quarterFinalsTeamNumbers[i], "qf");
+    }
+
+    //Load Semifinal matches
+    for(let i = 0; i < semiFinalsMatchNumbers.length; i++) {
+        addToEventDatabase(semiFinalsMatchNumbers[i], semiFinalsTeamNumbers[i], "sf");
+    }
+
+    //Load Final matches
+    for(let i = 0; i < finalsMatchNumbers.length; i++) {
+        addToEventDatabase(finalsMatchNumbers[i], finalsTeamNumbers[i], "f");
+    }
+
+    console.log("Match Data Loaded");
+
 }
