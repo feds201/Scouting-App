@@ -1,6 +1,9 @@
-import {ScrollView, View} from "react-native";
+import {Pressable, ScrollView, View} from "react-native";
 import {getEventDatabase} from "../../database/eventDatabase";
 import {Button, Text} from "@rneui/themed";
+import {Link} from "expo-router";
+import React from "react";
+import {setParams} from "./MatchScout";
 
 export default function Match_Home() {
     const arr: any[] = getEventDatabase();
@@ -16,7 +19,13 @@ export default function Match_Home() {
                     {arr.map((tang) => {
                         return (
                             <View key={tang.id} style={{alignItems: "center", paddingTop: 10}}>
-                                <Button key={tang.id} title={(tang.matchType).toUpperCase() + " " + tang.matchNumber} buttonStyle={{backgroundColor: '#4287f5', borderRadius: 30, width: 200, alignItems: "center"}}/>
+                                <Link href={"/MatchScouting/MatchScout"} asChild>
+                                    <Pressable style={{paddingTop: 3}} onPress={() => setParams(tang.matchNumber, tang.teamNumber, tang.matchType)}>
+                                        <View style={{backgroundColor: "#429ef5", width: 200, height: 40, alignItems: "center", justifyContent: "center", borderRadius: 30}}>
+                                            <Text style={{color: '#FFF', fontWeight: 'bold'}}>{(tang.matchType).toUpperCase() + " " + tang.matchNumber}</Text>
+                                        </View>
+                                    </Pressable>
+                                </Link>
                             </View>
                         );
                     })}

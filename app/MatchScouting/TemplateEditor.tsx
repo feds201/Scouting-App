@@ -8,6 +8,8 @@ import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Feather from "react-native-vector-icons/Feather"
+import {Button} from "@rneui/base";
+import {setTemplate} from "./MatchScout";
 
 const initialData: Item[] = [{text: "", key: ""}];
 
@@ -17,7 +19,7 @@ export default function templateEditor() {
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['3.5%', '38%'], []);
     const handleSheetChanges = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
+        //console.log('handleSheetChanges', index);
     }, []);
 
     function pushComponent(text: string) {
@@ -25,9 +27,16 @@ export default function templateEditor() {
         setData([...data, {text: text, key: index.toString()}]);
     }
 
+    function exportData() {
+        console.log("Export data");
+        console.log(data);
+        setTemplate(data);
+    }
+
     return (
         <View>
             <View style={{height: "100%"}}>
+                <Button title={"Finish"} buttonStyle={{height: 50}} onPress={() => exportData()}/>
                 <DraggableFlatList data={(data)} onDragEnd={({data}) => setData(data)} keyExtractor={(item) => item.key} renderItem={componentsView}/>
             </View>
             <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints} onChange={handleSheetChanges}>

@@ -55,6 +55,13 @@ export default function Layout() {
                     title: "Template Editor"
                 }}
             />
+            <Drawer.Screen
+                name="MatchScouting/QR"
+                options={{
+                    drawerItemStyle: { height: 0 },
+                    title: "QR"
+                }}
+            />
         </Drawer>
     );
 }
