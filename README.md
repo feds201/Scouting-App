@@ -5,24 +5,54 @@ out of Rochester High School.
 
 ## Description
 
-This app is our attempt to revamp our scouting capabilities using **technology**!
-This app is only a part of our scouting system which includes a server to house the information 
-gathered from match to match, and a main computer to display all relevant information at a glance.
+
 
 ## Getting Started
 
+1. Clone our project using your preferred IDE
+2. Ensure the latest [Node.js](https://nodejs.org/en) LTS version is installed by running `node -v` in any terminal
+3. run `choco install -y nodejs` to install Node.
+4. Run `npm install` in the project directory via terminal to install dependencies
+
 ### Dependencies
 
-*Mac device (To run IOS version of app)
-*Check package.json and package-lock.json for project dependencies
+- Windows or Linux Device to run Android version of the app
+- Mac with Xcode installed (To run the IOS version of the app)
+- Android Studio if you are using an Emulator to run Android
+- Check package.json for project dependencies
 
 ### Installing
 
-*Bundled app will be on Google Play Store and Apple App Store
+- The Bundled app will be on the Google Play Store and Apple App Store
 
-### Executing program
+## Executing The App
 
-* With your device selected (look under Device Manager for more info), go into the Run tab in the Main Menu above, and select "Run App".
+This Project utilizes [Expo](https://docs.expo.dev/), a React Native framework, to deploy the app.
+- **Do not use Expo Go to run this app**
+- **Development builds cannot be scanned with QR using the Expo Go app**
+
+### Android Run Instructions
+
+Android Studio is required to create development builds in react native. 
+- Install Android Studio
+- run `choco install -y microsoft-openjdk11` in the terminal (This app utilizes Expo SDK 49, which uses JDK 11)
+- you will also need to install [Android SDK](https://docs.expo.dev/guides/local-app-development/)
+- Ensure your Windows [Environment Variables](https://developer.android.com/tools/variables#envar) has a [path called ANDROID_HOME](https://developer.android.com/tools/variables) directed to the SDK folder 
+- To set up an Emulator visit [Expo's Guide](https://docs.expo.dev/workflow/android-studio-emulator/).
+- To use a local Android device, ensure the device is plugged in with [USB debugging](https://developer.android.com/studio/debug/dev-options) enabled.
+
+- **Build Project with Expo CLI**
+1. Run `npx expo install expo-dev-client` (Converts react native code to native android code) [learn more](https://docs.expo.dev/develop/development-builds/introduction/#what-is-expo-dev-client)
+2. Create a [development build](https://docs.expo.dev/develop/development-builds/create-a-build/).
+3. Run `npx expo start` in terminal
+4. In the letter options, type `s` to switch to development build
+5. Type `a` to run android
+
+- **Build Project Locally (Native Files)**
+1. Run `npx expo run:android` (This will start installing gradle and native android dependencies)
+2. Type `a` to run android
+
+### IOS Run Instructions
 
 ## Help Us!
 
