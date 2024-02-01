@@ -1,6 +1,6 @@
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
-import { Item } from "../../app/MatchScouting/TemplateEditor";
+import { Item } from "../types/Item";
 import { Text } from "@rneui/base";
 
 interface DebugProps {
@@ -9,12 +9,12 @@ interface DebugProps {
   isActive: boolean;
 }
 
-const Debug = ({ item, drag, isActive }: DebugProps, props) => {
+const Debug = ({ item, drag, isActive }: DebugProps) => {
   return (
     <ScaleDecorator>
       <TouchableOpacity
         activeOpacity={1}
-        {...props}
+        onLongPress={drag}
         disabled={isActive}
         style={styles.touchableOpacity}>
         <Text style={styles.text}>{item.key}</Text>

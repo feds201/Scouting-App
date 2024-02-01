@@ -2,28 +2,43 @@ import { TouchableOpacity, TextInput, Text } from "react-native";
 import { Button } from "@rneui/base";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { StyleSheet } from "react-native";
-import { Item } from "../../app/MatchScouting/TemplateEditor";
+import { Item } from "../../types/Item";
 import { useState } from "react";
 
-interface PlusMinusProps {
+interface PlusMinusTemplateProps {
   item: Item;
   drag: () => void;
   isActive: boolean;
 }
 
-const PlusMinus = ({ item, drag, isActive }: PlusMinusProps, props) => {
-  const [value, setValue] = useState<number>(0);
+const PlusMinusTemplate = ({ item, drag, isActive }: PlusMinusTemplateProps) => {
   return (
     <ScaleDecorator>
       <TouchableOpacity
         activeOpacity={1}
-        {...props}
+        onLongPress={drag}
         disabled={isActive}
-        style={styles.touchableOpacity}>
-        <TextInput placeholder={"Title"} textAlign={"center"} style={styles.textInput} />
-        <Button title={"+"} buttonStyle={styles.buttonStyle} containerStyle={styles.plusContainerStyle} onPress={() => setValue(value + 1)} />
-        <Text id={item.key} style={styles.text}>{value}</Text>
-        <Button title={"-"} buttonStyle={styles.buttonStyle} containerStyle={styles.minusContainerStyle} onPress={() => setValue(value - 1)} />
+        style={styles.touchableOpacity}
+      >
+        <TextInput
+          placeholder={"Title"}
+          textAlign={"center"}
+          style={styles.textInput}
+          onChangeText={
+            (text) => {
+              item.name = text;
+            }
+          } />
+
+        <Button
+          title={"+"}
+          buttonStyle={styles.buttonStyle}
+          containerStyle={styles.plusContainerStyle} />
+        <Text id={item.key} style={styles.text}>0</Text>
+        <Button
+          title={"-"}
+          buttonStyle={styles.buttonStyle}
+          containerStyle={styles.minusContainerStyle} />
       </TouchableOpacity>
     </ScaleDecorator>
   )
@@ -60,4 +75,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PlusMinus;
+export default PlusMinusTemplate;

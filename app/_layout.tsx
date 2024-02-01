@@ -43,14 +43,14 @@ export default function Layout() {
         }}
       />
       <Drawer.Screen
-        name="MatchScouting/MatchScout"
+        name="MatchScouting/Match/[id]"
         options={{
           drawerItemStyle: styles.height0,
           title: "Match Scout"
         }}
       />
       <Drawer.Screen
-        name="MatchScouting/TemplateEditor"
+        name="MatchScouting/Template/[name]"
         options={{
           drawerItemStyle: styles.height0,
           title: "Template Editor"

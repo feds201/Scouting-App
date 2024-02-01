@@ -1,36 +1,49 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import BottomSheet from "@gorhom/bottom-sheet";
 import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
-import { componentsView } from "../../components/TemplateComponents";
+import { templateViewGenerator } from "../../../components/GenerateDraggableFlatList";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons"
 import Feather from "react-native-vector-icons/Feather"
 import { Button } from "@rneui/base";
-import { setTemplate } from "./MatchScout";
+import { Item } from "../../../types/Item";
+import { dataSource } from "../../../database/data-source";
+import { TemplateEntity } from "../../../database/entity/Template.entity";
+import { useLocalSearchParams } from "expo-router";
 
-export interface Item {
-  text: string,
-  key: string
-}
+export default function Template() {
+  const { name } = useLocalSearchParams();
 
-const initialData: Item[] = [{ text: "", key: "" }];
-
-export default function templateEditor() {
-  const [index, setIndex] = useState(0);
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<Item[]>([]);
+  const [uniqueKey, setUniqueKey] = useState<number>(1000);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['3.5%', '38%'], []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
 
-  function pushComponent(text: string) {
-    setIndex(index + 1);
-    setData([...data, { text: text, key: index.toString() }]);
+  const snapPoints = useMemo(() => ['3.5%', '38%'], []);
+
+  function pushComponent(type: string) {
+    setData([...data, { type: type, key: uniqueKey.toString(), name: "", data: "{}" }]);
+    setUniqueKey(uniqueKey + 1);
+  }
+
+  const handleFinish = async () => {
+    const currentData = data;
+    for (let i = 0; i < currentData.length; i++) {
+      currentData[i].key = i.toString();
+    }
+
+    const TemplateRepository = dataSource.getRepository(TemplateEntity);
+    const newTemplate = new TemplateEntity();
+
+    newTemplate.name = name.slice(0, name.length - 4) as string;
+    newTemplate.data = JSON.stringify(currentData);
+
+    console.log(newTemplate);
+
+    TemplateRepository.save(newTemplate);
   }
 
   return (
@@ -39,20 +52,19 @@ export default function templateEditor() {
         <Button
           title={"Finish"}
           buttonStyle={styles.button}
-          onPress={() => console.log("this is where we should commit the data that we have")}
+          onPress={handleFinish}
         />
         <DraggableFlatList
           data={(data)}
-          onDragEnd={({ data }) => { setData(data); console.log("onDragEnd" + data) }}
+          onDragEnd={({ data }) => setData(data)}
           keyExtractor={(item) => item.key}
-          renderItem={componentsView}
+          renderItem={templateViewGenerator}
         />
       </View>
       <BottomSheet
         ref={bottomSheetRef}
         index={1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}>
+        snapPoints={snapPoints} >
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.labelOption} onPress={() => pushComponent("header")}>
             <MaterialCommunityIcons name="label" size={35} color="#fff" />
@@ -137,12 +149,3 @@ const styles = StyleSheet.create({
     marginTop: 20
   }
 });
-
-export const mapData = (d: any, index: number, arr: any[]) => {
-  return {
-    text: `${index}`,
-    key: `${index}`
-  };
-}
-
-// export type Item = ReturnType<typeof mapData>;

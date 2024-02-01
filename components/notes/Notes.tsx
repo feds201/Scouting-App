@@ -1,6 +1,6 @@
 import { TouchableOpacity, TextInput, StyleSheet } from "react-native";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
-import { Item } from "../../app/MatchScouting/TemplateEditor";
+import { Item } from "../../types/Item";
 
 interface NotesProps {
   item: Item
@@ -8,10 +8,13 @@ interface NotesProps {
   isActive: boolean;
 }
 
-const Notes = ({ item, drag, isActive }: NotesProps, props) => {
+const Notes = ({ item, drag, isActive }: NotesProps) => {
   return (
     <ScaleDecorator>
-      <TouchableOpacity activeOpacity={1} {...props} disabled={isActive} style={styles.touchableOpacity}>
+      <TouchableOpacity
+        activeOpacity={1}
+        disabled={isActive}
+        style={styles.touchableOpacity}>
         <TextInput placeholder={"Title"} textAlign={"center"} style={styles.titleTextInput} />
         <TextInput placeholder={"Notes"} style={styles.notesTextInput} />
       </TouchableOpacity>

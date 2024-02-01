@@ -1,17 +1,77 @@
-import React, { useState } from 'react';
-import { Modal, StyleSheet, View, TextInput, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal, StyleSheet, View, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Button, Text } from "@rneui/themed";
 import { Link } from "expo-router";
+import { TemplateEntity } from '../../database/entity/Template.entity';
+import { dataSource } from '../../database/data-source';
+import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TemplateHome() {
+  const [templates, setTemplates] = useState<TemplateEntity[]>(null);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
 
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    console.log("refreshed")
+    if (!isFocused) return;
+    const getTemplates = async () => {
+      const TemplateRepository = dataSource.getRepository(TemplateEntity);
+      const returnedTemplates = await TemplateRepository.find();
+      setTemplates(returnedTemplates);
+      console.log("refred")
+      console.log(returnedTemplates);
+    }
+    getTemplates();
+  }, [isFocused]);
+
   return (
     <View>
       <View style={styles.buttonView}>
-        <Button title={"Create New Template"} buttonStyle={{ borderRadius: 30 }} containerStyle={{ width: 200 }} onPress={() => setModalVisible(true)} />
+        <Button
+          title={"Create New Template"}
+          buttonStyle={{ borderRadius: 30 }}
+          containerStyle={{ width: 200 }}
+          onPress={() => setModalVisible(true)} />
+        <ScrollView style={styles.topLevelScrollView} showsVerticalScrollIndicator={false}>
+          <View style={styles.scrollViewArea}>
+            {templates ? (
+              <>
+                <Text style={styles.templateHeadingText}> Select which template to use </Text>
+                {templates.map((template) => (
+                  <View key={template.id} style={styles.topLevelTemplatesView}>
+                    <Pressable
+                      style={styles.pressableForTemplates}
+                      onPress={async () => {
+                        await AsyncStorage.setItem("template", template.name);
+                        console.log(await AsyncStorage.getItem("template"));
+                        Alert.alert('Template Selected', `The '${template.name}' template is now selected`, [
+                          {
+                            text: 'Cancel',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                          },
+                          { text: 'OK', onPress: () => console.log('OK Pressed') },
+                        ])
+                      }}
+                    >
+                      <View style={styles.templateView}>
+                        <Text style={styles.templateViewText}>
+                          {template.name}
+                        </Text>
+                      </View>
+                    </Pressable>
+                  </View>
+                ))}
+              </>
+            ) : (
+              <Text>No templates made.</Text>
+            )}
+          </View>
+        </ScrollView>
       </View>
       <Modal
         animationType={"fade"}
@@ -26,7 +86,7 @@ export default function TemplateHome() {
               textAlign={"center"}
               onChangeText={(text) => setName(text)}
               style={styles.templateInput} />
-            <Link href={"/MatchScouting/TemplateEditor"} asChild>
+            <Link href={{ pathname: "/MatchScouting/Template/[name].tsx", params: { name: name } }} asChild>
               <Pressable style={styles.pressable} onPress={() => setModalVisible(false)}>
                 <View style={styles.pressableView}>
                   <Text style={styles.pressableText}>Create</Text>
@@ -88,5 +148,37 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+
+
+  topLevelTemplatesView: {
+    alignItems: "center",
+    paddingTop: 10
+  },
+  pressableForTemplates: {
+    paddingTop: 3,
+  },
+  templateView: {
+    backgroundColor: "#429ef5",
+    width: 200,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 30
+  },
+  templateViewText: {
+    color: '#FFF',
+    fontWeight: 'bold'
+  },
+  topLevelScrollView: {
+    marginBottom: 0,
+  },
+  scrollViewArea: {
+    paddingBottom: 50,
+  },
+  templateHeadingText: {
+    paddingTop: 20,
+    paddingBottom: 0,
+    fontSize: 20,
   }
 });

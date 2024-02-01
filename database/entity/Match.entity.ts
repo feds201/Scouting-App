@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity("match")
-export class Match {
+export class MatchEntity {
   @PrimaryGeneratedColumn("identity")
   id: number
 
@@ -19,4 +19,7 @@ export class Match {
 
   @Column("integer")
   teamNumber: number
+
+  @Column("text")
+  data: string
 }

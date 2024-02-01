@@ -2,7 +2,7 @@ import { Input, Text } from '@rneui/themed';
 import { StyleSheet, View } from "react-native";
 import { Button } from "@rneui/base";
 import { useState } from "react";
-import { Match } from '../../database/entity/Match';
+import { MatchEntity } from '../../database/entity/Match.entity';
 import { dataSource } from '../../database/data-source';
 
 export default function Setup() {
@@ -28,7 +28,7 @@ export default function Setup() {
       />
 
       <Button title={"Submit"} onPress={async () => {
-        dataSource.getRepository(Match).clear();
+        dataSource.getRepository(MatchEntity).clear();
         await getEventDetailsFromBlueAlliance(requestURL, robotCode.at(0), robotCode.at(1));
       }} />
 
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
 const getEventDetailsFromBlueAlliance = async (requestURL: string, teamColor: string, orderNumber: string) => {
 
-  const MatchRepository = dataSource.getRepository(Match);
+  const MatchRepository = dataSource.getRepository(MatchEntity);
 
   try {
     const req = await fetch(requestURL, {
@@ -79,13 +79,14 @@ const getEventDetailsFromBlueAlliance = async (requestURL: string, teamColor: st
     // console.log(JSON.stringify(json, null, 2));
 
     for (const [_, match] of Object.entries(json)) {
-      const newMatch = new Match();
+      const newMatch = new MatchEntity();
 
       newMatch.allianceColor = teamColor.toLowerCase() == "r" ? "Red" : "Blue";
       newMatch.allianceRobotNumber = Number(orderNumber);
       newMatch.matchNumber = match["match_number"];
       newMatch.matchType = match["comp_level"];
       newMatch.teamNumber = match.alliances[newMatch.allianceColor.toLowerCase()]["team_keys"][Number(orderNumber) - 1];
+      newMatch.data = "";
 
       console.log(newMatch);
 

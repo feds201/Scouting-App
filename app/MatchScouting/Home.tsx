@@ -2,14 +2,20 @@ import { Pressable, ScrollView, View, StyleSheet } from "react-native";
 import { Text } from "@rneui/themed";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { setParams } from "./MatchScout";
-import { Match } from "../../database/entity/Match";
+import { MatchEntity } from "../../database/entity/Match.entity";
 import { dataSource } from "../../database/data-source";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function Match_Home() {
-  const [matches, setMatches] = useState<Match[]>([]);
+export default function Home({ }) {
+  const [matches, setMatches] = useState<MatchEntity[]>([]);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (!isFocused) {
+      return;
+    }
+
     const connect = async () => {
       if (!dataSource.isInitialized) {
         await dataSource.initialize();
@@ -18,7 +24,7 @@ export default function Match_Home() {
     connect();
 
     const retrieveMatches = async () => {
-      const MatchRepository = dataSource.getRepository(Match);
+      const MatchRepository = dataSource.getRepository(MatchEntity);
       const qmMatches = await MatchRepository
         .createQueryBuilder("match")
         .where("match.matchType = :matchType", { matchType: "qm" })
@@ -43,29 +49,31 @@ export default function Match_Home() {
         .orderBy("match.matchNumber", "ASC")
         .getMany()
 
-      let allMatches = qmMatches
-        .concat(qfMatches)
-        .concat(sfMatches)
-        .concat(fMatches);
-
+      let allMatches = [...qmMatches, ...qfMatches, ...sfMatches, ...fMatches];
+      console.log(allMatches);
       setMatches(allMatches);
     }
 
     retrieveMatches();
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={styles.topLevelView}>
       <Text h3 style={styles.matchHeadingText}>Matches</Text>
+
       <ScrollView style={styles.topLevelScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.scrollViewArea}>
           {matches.map((match) => {
             return (
               <View key={match.id} style={styles.topLevelMatchView}>
-                <Link href={"/MatchScouting/MatchScout"} asChild>
+                <Link
+                  href={{
+                    pathname: "/MatchScouting/Match/[id]",
+                    params: { id: match.id }
+                  }}
+                  asChild>
                   <Pressable
                     style={styles.pressable}
-                    onPress={() => setParams(match.matchNumber, match.teamNumber, match.matchType)}
                   >
                     <View style={styles.matchView}>
                       <Text style={styles.matchViewText}>
@@ -79,6 +87,7 @@ export default function Match_Home() {
           })}
         </View>
       </ScrollView>
+
     </View>
   );
 }

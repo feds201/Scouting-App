@@ -3,6 +3,7 @@ import { DrawerContentComponentProps, DrawerItemList } from "@react-navigation/d
 import { Text } from '@rneui/themed';
 import { Link } from "expo-router";
 import React, { useState } from "react";
+
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   const [visible, setVisibility] = useState(false);
   return (

@@ -1,8 +1,8 @@
 import { CheckBox } from "@rneui/base";
 import { TouchableOpacity, TextInput, StyleSheet } from "react-native";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
-import { Item } from "../../app/MatchScouting/TemplateEditor";
 import { useState } from "react";
+import { Item } from "../../types/Item";
 
 interface CheckboxProps {
   item: Item;
@@ -10,13 +10,12 @@ interface CheckboxProps {
   isActive: boolean;
 }
 
-const Checkbox = ({ item, drag, isActive }: CheckboxProps, props) => {
+const Checkbox = ({ item, drag, isActive }: CheckboxProps) => {
   const [checked, setChecked] = useState<boolean>(false);
   return (
     <ScaleDecorator>
       <TouchableOpacity
         activeOpacity={1}
-        {...props}
         disabled={isActive}
         style={styles.touchableOpacity}
       >

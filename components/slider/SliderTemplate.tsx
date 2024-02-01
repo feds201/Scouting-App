@@ -1,7 +1,7 @@
 import { Button, Dialog, Slider as RNEUISlider } from "@rneui/base";
 import { TouchableOpacity, TextInput, View, Text, StyleSheet } from "react-native";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
-import { Item } from "../../app/MatchScouting/TemplateEditor";
+import { Item } from "../../types/Item";
 import { useState } from "react";
 
 interface SliderProps {
@@ -10,8 +10,7 @@ interface SliderProps {
   isActive: boolean;
 }
 
-const Slider = ({ item, drag, isActive }: SliderProps, props) => {
-  const [value, setValue] = useState<number>(0);
+const Slider = ({ item, drag, isActive }: SliderProps) => {
   const [dialog, setDialog] = useState<boolean>(false);
   const [minValue, setMinValue] = useState<number>(0);
   const [step, setStep] = useState<number>(0);
@@ -19,13 +18,22 @@ const Slider = ({ item, drag, isActive }: SliderProps, props) => {
 
   return (
     <ScaleDecorator>
-
       <TouchableOpacity
         activeOpacity={1}
-        {...props}
+        onLongPress={drag}
         disabled={isActive}
-        style={styles.touchableOpacity}>
-        <TextInput placeholder={"Title"} textAlign={"center"} style={styles.titleTextInput} />
+        style={styles.touchableOpacity}
+      >
+        <TextInput
+          placeholder={"Title"}
+          textAlign={"center"}
+          style={styles.titleTextInput}
+          onChangeText={
+            (text) => {
+              item.name = text;
+            }
+          } />
+
         <View style={styles.sliderView}>
           <RNEUISlider
             minimumValue={minValue}
@@ -33,10 +41,10 @@ const Slider = ({ item, drag, isActive }: SliderProps, props) => {
             maximumValue={maxValue}
             thumbTintColor={"#4287f5"}
             style={styles.slider}
-            value={value}
-            onValueChange={(value) => setValue(value)} />
-          <Text>Value: {value}</Text>
+            value={minValue} />
+          <Text>Value: {minValue}</Text>
         </View>
+
         <Button title={"Options"} onPress={() => setDialog(true)} />
       </TouchableOpacity>
 
@@ -46,9 +54,36 @@ const Slider = ({ item, drag, isActive }: SliderProps, props) => {
         onBackdropPress={() => setDialog(!dialog)}>
         <Dialog.Title title="Options" />
         <Dialog.Actions>
-          <TextInput placeholder={"MIN VALUE"} onChangeText={(value) => setMinValue(parseInt(value))} />
-          <TextInput placeholder={"STEP VALUE"} onChangeText={(value) => setStep(parseInt(value))} />
-          <TextInput placeholder={"MAX VALUE"} onChangeText={(value) => setMaxValue(parseInt(value))} />
+          <TextInput
+            placeholder={"MIN VALUE"}
+            onChangeText={
+              (value) => {
+                setMinValue(parseInt(value));
+                const object = JSON.parse(item.data);
+                object.minValue = value;
+                item.data = JSON.stringify(object);
+              }
+            } />
+          <TextInput
+            placeholder={"STEP VALUE"}
+            onChangeText={
+              (value) => {
+                setStep(parseInt(value));
+                const object = JSON.parse(item.data);
+                object.step = value;
+                item.data = JSON.stringify(object);
+              }
+            } />
+          <TextInput
+            placeholder={"MAX VALUE"}
+            onChangeText={
+              (value) => {
+                setMaxValue(parseInt(value));
+                const object = JSON.parse(item.data);
+                object.maxValue = value;
+                item.data = JSON.stringify(object);
+              }
+            } />
           <Button title={"Submit"} onPress={() => setDialog(false)} />
         </Dialog.Actions>
       </Dialog>
