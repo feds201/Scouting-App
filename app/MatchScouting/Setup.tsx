@@ -6,8 +6,10 @@ import { MatchEntity } from '../../database/entity/Match.entity';
 import { dataSource } from '../../database/data-source';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TemplateEntity } from '../../database/entity/Template.entity';
+import { useRouter } from 'expo-router';
 
 export default function Setup() {
+  const router = useRouter();
 
   const [eventCode, setEventCode] = useState('');
   const [robotCode, setRobotCode] = useState('');
@@ -33,6 +35,7 @@ export default function Setup() {
         dataSource.getRepository(MatchEntity).clear();
         await getEventDetailsFromBlueAlliance(requestURL, robotCode.at(0), robotCode.at(1));
         await AsyncStorage.setItem("Event Code", eventCode + " " + robotCode);
+        router.push("/MatchScouting/Home");
       }} />
 
       <Text h3 style={styles.debugText}>Debug Options</Text>
@@ -68,10 +71,10 @@ const getEventDetailsFromBlueAlliance = async (requestURL: string, teamColor: st
 
   const currentTemplateString = await AsyncStorage.getItem("template");
 
-  const currentTemplate = await TemplateRepository 
-                            .createQueryBuilder("template")
-                            .where("template.name = :name", {name: currentTemplateString})
-                            .getOne();
+  const currentTemplate = await TemplateRepository
+    .createQueryBuilder("template")
+    .where("template.name = :name", { name: currentTemplateString })
+    .getOne();
 
   const MatchRepository = dataSource.getRepository(MatchEntity);
 

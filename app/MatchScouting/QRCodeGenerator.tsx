@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 
@@ -16,6 +16,7 @@ export default function QRCodeGenerator() {
     const getData = async () => {
       const newText = await AsyncStorage.getItem("QR Code Text");
       setText(newText);
+      
     }
     getData();
   }, [isFocused])
@@ -34,7 +35,9 @@ export default function QRCodeGenerator() {
           </View>
         </View>
       ) : (
-        <View> No text yet. </View>
+        <View> 
+          <Text>No text yet!</Text> 
+        </View>
       )}
     </>
   );

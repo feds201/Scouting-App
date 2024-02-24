@@ -1,6 +1,6 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Button, FlatList, Pressable, StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { MatchEntity } from "../../../database/entity/Match.entity";
 import { dataSource } from "../../../database/data-source";
 import { useIsFocused } from "@react-navigation/native";
@@ -16,15 +16,21 @@ import Debug from "../../../components/Debug";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MatchScout() {
+  // const router = useRouter();
   const { id } = useLocalSearchParams();
+
+  // const isFocused = useIsFocused();
 
   const [match, setMatch] = useState<MatchEntity>(null);
   const [data, setData] = useState<Item[]>([]);
+  const [scouterID, setScouterID] = useState<string>("-1");
 
-  const isFocused = useIsFocused();
+  console.log("RENDERING!", Date.now(), `${match}, ${data}`);
 
   useEffect(() => {
-    if (!isFocused) return;
+    // if (!isFocused) {
+    //   return;
+    // }
     const getMatch = async () => {
       // console.log(id);
       const MatchRepository = dataSource.getRepository(MatchEntity);
@@ -32,16 +38,21 @@ export default function MatchScout() {
         .createQueryBuilder("match")
         .where("match.id = :id", { id: id })
         .getOne();
+
       setMatch(wantedMatch);
 
-      setData(JSON.parse(match.data))
+      setData(JSON.parse(match.data));
+      console.log(data)
+
+      // router.setParams({ id: id as string });
       // console.log(data);
     }
     getMatch();
-  }, [id, isFocused]);
+
+  }, [id]);
 
   const saveItem = async (changedItem: Item): Promise<void> => {
-    const newData = data;
+    const newData = [...data];
 
     newData.forEach((item) => {
       item = changedItem.key == item.key ? changedItem : item
@@ -49,7 +60,15 @@ export default function MatchScout() {
 
     setData(newData);
 
-    const newMatch = match;
+    const newMatch = {
+      id: match.id,
+      matchNumber: match.matchNumber,
+      matchType: match.matchType,
+      allianceColor: match.allianceColor,
+      allianceRobotNumber: match.allianceRobotNumber,
+      teamNumber: match.teamNumber,
+      data: match.data
+    }
     newMatch.data = JSON.stringify(newData);
     setMatch(newMatch);
 
@@ -64,7 +83,8 @@ export default function MatchScout() {
       "matchNumber": match.matchNumber,
       "teamNumber": match.teamNumber,
       "allianceColor": match.allianceColor,
-      "allianceRobotNumber": match.allianceRobotNumber
+      "allianceRobotNumber": match.allianceRobotNumber,
+      "scouterID": scouterID,
     };
 
     data.forEach(obj => {
@@ -79,12 +99,16 @@ export default function MatchScout() {
   }
 
 
+
   return (
     <>
       {match ? (
         <View style={styles.topLevelView}>
           {/* <View> */}
-          <Text>{match.matchType + " " + match.teamNumber + " " + match.matchNumber}</Text>
+          <Text style={styles.titleText}>{match.matchType + " " + match.teamNumber + " " + match.matchNumber}</Text>
+          {/* <Button title="Reset" onPress={handleReset} /> */}
+          <Text style={styles.titleText}>Scouting ID: </Text>
+          <TextInput defaultValue="1" style={styles.textInput} onChangeText={(text) => setScouterID(text)} />
           <Link href={"/MatchScouting/QRCodeGenerator"} asChild>
             <Pressable
               style={styles.pressable}
@@ -97,10 +121,10 @@ export default function MatchScout() {
           </Link>
           <View>
             <FlatList
-              data={(data)}
+              data={data}
+              extraData={data}
               keyExtractor={(item) => item.key}
               style={styles.flatList}
-              extraData={match.id}
               renderItem={({ item }) => {
                 switch (item.type) {
                   case "header":
@@ -135,8 +159,13 @@ const styles = StyleSheet.create({
   topLevelView: {
     alignItems: "center",
   },
+  titleText: {
+    marginTop: 20,
+    fontSize: 20,
+    textTransform: "uppercase",
+  },
   pressable: {
-    paddingTop: 30,
+    padding: 20,
   },
   createView: {
     backgroundColor: "#429ef5",
@@ -152,5 +181,15 @@ const styles = StyleSheet.create({
   },
   flatList: {
     marginTop: 10,
+  },
+  textInput: {
+    color: "white",
+    backgroundColor: "black",
+  },
+  textInputView: {
+    flex: 1,
+    backgroundColor: "red",
+    height: 100,
+    marginTop: 30,
   }
 });

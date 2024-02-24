@@ -57,7 +57,7 @@ export default function Layout() {
         }}
       />
       <Drawer.Screen
-        name="MatchScouting/QR"
+        name="MatchScouting/QRCodeGenerator"
         options={{
           drawerItemStyle: styles.height0,
           title: "QR"

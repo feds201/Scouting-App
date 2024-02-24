@@ -32,7 +32,7 @@ const Stopwatch = ({ item, saveItem }: StopwatchProps) => {
       <Text style={styles.textInput}>{item.name}</Text>
       <StopwatchTimer ref={stopwatchTimerRef} />
       <Button title={"Start"} buttonStyle={styles.button} containerStyle={styles.firstButtonContainer} onPress={() => stopwatchTimerRef.current?.play()} />
-      <Button title={"Pause"} buttonStyle={styles.button} containerStyle={styles.restButtonContainer} onPress={() => stopwatchTimerRef.current?.pause()} />
+      <Button title={"Pause"} buttonStyle={styles.button} containerStyle={styles.restButtonContainer} onPress={handlePause} />
       <Button title={"Reset"} buttonStyle={styles.button} containerStyle={styles.restButtonContainer} onPress={() => stopwatchTimerRef.current?.reset()} />
     </TouchableOpacity>
   );

@@ -16,13 +16,12 @@ const Checkbox = ({ item, saveItem }: CheckboxProps) => {
     setChecked(!checked);
 
     const newData = JSON.parse(item.data);
-    newData.checked = checked;
+    newData.checked = !checked;
 
     const newItem = item;
     newItem.data = JSON.stringify(newData);
     await saveItem(newItem);
   }
-
 
   return (
     <TouchableOpacity
