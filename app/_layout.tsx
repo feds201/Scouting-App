@@ -14,13 +14,13 @@ export default function Layout() {
           title: 'Home',
         }}
       />
-      <Drawer.Screen
-        name="MatchScouting/TemplateHome"
-        options={{
-          drawerLabel: 'Templates',
-          title: 'Templates',
-        }}
-      />
+        <Drawer.Screen
+            name="MatchScouting/Match/MatchScout"
+            options={{
+                drawerItemStyle: styles.height0,
+                title: 'MatchInput',
+            }}
+        />
       <Drawer.Screen
         name={"MatchScouting/Setup"}
         options={{
@@ -40,20 +40,6 @@ export default function Layout() {
         options={{
           drawerItemStyle: styles.height0,
           title: "uhhh ur not supposed to be here"
-        }}
-      />
-      <Drawer.Screen
-        name="MatchScouting/Match/[id]"
-        options={{
-          drawerItemStyle: styles.height0,
-          title: "Match Scout"
-        }}
-      />
-      <Drawer.Screen
-        name="MatchScouting/Template/[name]"
-        options={{
-          drawerItemStyle: styles.height0,
-          title: "Template Editor"
         }}
       />
       <Drawer.Screen

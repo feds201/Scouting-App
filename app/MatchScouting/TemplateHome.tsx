@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, View, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Button, Text } from "@rneui/themed";
 import { Link } from "expo-router";
@@ -190,4 +190,4 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     fontSize: 20,
   }
-});
+}); */

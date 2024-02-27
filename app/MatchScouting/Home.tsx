@@ -6,12 +6,17 @@ import { MatchEntity } from "../../database/entity/Match.entity";
 import { dataSource } from "../../database/data-source";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useFonts} from "expo-font";
 
 export default function Home({ }) {
   const [matches, setMatches] = useState<MatchEntity[]>([]);
   const [eventCode, setEventCode] = useState<string>("");
 
   const isFocused = useIsFocused();
+
+  const [fontsLoaded] = useFonts({
+    'Raleway-Black': require('../../assets/fonts/Raleway-Black.ttf'),
+  });
 
   useEffect(() => {
     if (!isFocused) {
@@ -23,10 +28,11 @@ export default function Home({ }) {
         await dataSource.initialize();
       }
     };
-    connect();
+   connect().then(r => retrieveMatches());
 
     const retrieveMatches = async () => {
       const MatchRepository = dataSource.getRepository(MatchEntity);
+      console.log(dataSource.getRepository(MatchEntity));
       const qmMatches = await MatchRepository
         .createQueryBuilder("match")
         .where("match.matchType = :matchType", { matchType: "qm" })
@@ -56,19 +62,16 @@ export default function Home({ }) {
       setMatches(allMatches);
     }
 
-    retrieveMatches();
-
     const getEventCode = async () => {
       const returnedEventCode = await AsyncStorage.getItem("Event Code");
       setEventCode(returnedEventCode);
     }
-    getEventCode();
+    getEventCode().then(r => console.log("yoooo"));
   }, [isFocused]);
 
   return (
     <View style={styles.topLevelView}>
-      <Text h3 style={styles.matchHeadingText}>Matches {eventCode ? eventCode : ""}</Text>
-
+      <Text style={{fontFamily: 'Raleway-Black', fontSize: 60, paddingTop: 10}}> Matches </Text>
       <ScrollView style={styles.topLevelScrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.scrollViewArea}>
           {matches.map((match) => {
@@ -76,7 +79,7 @@ export default function Home({ }) {
               <View key={match.id} style={styles.topLevelMatchView}>
                 <Link
                   href={{
-                    pathname: "/MatchScouting/Match/[id]",
+                    pathname: "/MatchScouting/Match/MatchScout",
                     params: { id: match.id }
                   }}
                   asChild>
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   scrollViewArea: {
-    paddingBottom: 50,
+    paddingBottom: 80,
   },
   topLevelMatchView: {
     alignItems: "center",
@@ -122,14 +125,15 @@ const styles = StyleSheet.create({
   },
   matchView: {
     backgroundColor: "#429ef5",
-    width: 200,
-    height: 40,
+    width: 400,
+    height: 60,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 30
   },
   matchViewText: {
     color: '#FFF',
+    fontSize: 25,
     fontWeight: 'bold'
   }
 })

@@ -20,6 +20,4 @@ export class MatchEntity {
   @Column("integer")
   teamNumber: number
 
-  @Column("text")
-  data: string
 }

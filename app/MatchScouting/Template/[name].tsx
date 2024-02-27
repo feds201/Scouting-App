@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+/*import React, { useMemo, useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import BottomSheet from "@gorhom/bottom-sheet";
 import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
@@ -151,4 +151,4 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 20
   }
-});
+}); */
