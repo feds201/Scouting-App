@@ -15,26 +15,26 @@ export default function Layout() {
         }}
       />
         <Drawer.Screen
+            name={"MatchScouting/Setup"}
+            options={{
+                drawerLabel: 'Setup',
+                title: 'Setup',
+            }}
+        />
+        <Drawer.Screen
+            name={"MatchScouting/Settings"}
+            options={{
+                drawerLabel: 'Settings',
+                title: "Settings",
+            }}
+        />
+        <Drawer.Screen
             name="MatchScouting/Match/MatchScout"
             options={{
                 drawerItemStyle: styles.height0,
                 title: 'MatchInput',
             }}
         />
-      <Drawer.Screen
-        name={"MatchScouting/Setup"}
-        options={{
-          drawerLabel: 'Setup',
-          title: 'Setup',
-        }}
-      />
-      <Drawer.Screen
-        name={"MatchScouting/Settings"}
-        options={{
-          drawerLabel: 'Settings',
-          title: "Settings",
-        }}
-      />
       <Drawer.Screen
         name="index"
         options={{

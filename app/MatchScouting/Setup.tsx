@@ -22,32 +22,32 @@ export default function Setup() {
   });
 
   return (
-    <View style={styles.topLevelView}>
-      <Text style={{fontFamily: 'Raleway-Black', fontSize: 60}}>Event Code</Text>
-      <Input
-        placeholder='Example: 2022miroc'
-        onChangeText={text => setEventCode(text)}
-        containerStyle={{width: 300, paddingTop: 20}} style={{fontSize: 30}}
-      />
-      <Text style={{fontFamily: 'Raleway-Black', fontSize: 60}}>Robot Code</Text>
-      <Input
-        placeholder='Example: R1'
-        onChangeText={text => setRobotCode(text)}
-        containerStyle={{width: 300, paddingTop: 20}} style={{fontSize: 30}}
-      />
+      <View style={styles.topLevelView}>
+        <Text style={{fontFamily: 'Raleway-Black', fontSize: 60}}>Event Code</Text>
+        <Input
+            placeholder='Example: 2022miroc'
+            onChangeText={text => setEventCode(text)}
+            containerStyle={{width: 300, paddingTop: 20}} style={{fontSize: 30}}
+        />
+        <Text style={{fontFamily: 'Raleway-Black', fontSize: 60}}>Robot Code</Text>
+        <Input
+            placeholder='Example: R1'
+            onChangeText={text => setRobotCode(text)}
+            containerStyle={{width: 300, paddingTop: 20}} style={{fontSize: 30}}
+        />
 
-      <Button title={"Submit"} buttonStyle={{backgroundColor:"#429ef5"}} containerStyle={{backgroundColor: "#429ef5", width: 300, height: 50, alignItems: "center", justifyContent: "center", borderRadius: 30}} onPress={async () => {
-        await dataSource.getRepository(MatchEntity).clear();
-        await getEventDetailsFromBlueAlliance(requestURL, robotCode.at(0), robotCode.at(1));
-        await AsyncStorage.setItem("Event Code", eventCode + " " + robotCode);
-        router.push("/MatchScouting/Home");
-      }} />
+        <Button title={"Submit"} buttonStyle={{backgroundColor:"#429ef5", width: 300 , height: 50, alignItems: "center", justifyContent: "center", borderRadius: 30}} onPress={async () => {
+          await dataSource.getRepository(MatchEntity).clear();
+          await getEventDetailsFromBlueAlliance(requestURL, robotCode.at(0), robotCode.at(1));
+          await AsyncStorage.setItem("Event Code", eventCode + " " + robotCode);
+          router.push("/MatchScouting/Home");
+        }} />
 
-      {/* <Button title={"Create Database"} onPress={() => createEventDatabase()} containerStyle={styles.firstButton} />
+        {/* <Button title={"Create Database"} onPress={() => createEventDatabase()} containerStyle={styles.firstButton} />
       <Button title={"Add to Database"} onPress={() => addToEventDatabase(1, 201, "qm")} containerStyle={styles.restButtons} />
       <Button title={"Get from Database"} onPress={() => debugPrint()} containerStyle={styles.restButtons} />
       <Button title={"Delete Debug Data"} onPress={() => deleteData()} containerStyle={styles.restButtons} /> */}
-    </View>
+      </View>
   );
 }
 
@@ -78,9 +78,9 @@ const getEventDetailsFromBlueAlliance = async (requestURL: string, teamColor: st
   const currentTemplateString = await AsyncStorage.getItem("template");
 
   const currentTemplate = await TemplateRepository
-    .createQueryBuilder("template")
-    .where("template.name = :name", { name: currentTemplateString })
-    .getOne();
+      .createQueryBuilder("template")
+      .where("template.name = :name", { name: currentTemplateString })
+      .getOne();
 
   const MatchRepository = dataSource.getRepository(MatchEntity);
 

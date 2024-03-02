@@ -3,6 +3,7 @@ import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import {getBundle} from "./Match/MatchScout";
 
 
 export default function QRCodeGenerator() {
@@ -16,7 +17,6 @@ export default function QRCodeGenerator() {
     const getData = async () => {
       const newText = await AsyncStorage.getItem("QR Code Text");
       setText(newText);
-      
     }
     getData();
   }, [isFocused])
@@ -27,7 +27,7 @@ export default function QRCodeGenerator() {
         <View style={styles.container}>
           <View style={styles.qrCode}>
             <QRCode
-              value={text}
+              value={getBundle()}
               size={200}
               color="black"
               backgroundColor="white"

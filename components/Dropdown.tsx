@@ -54,6 +54,14 @@ const DropdownComponent = () => {
     );
 };
 
+export function getDropDown() {
+    return
+}
+
+export interface dropDownProps {
+    joe?: number
+}
+
 export default DropdownComponent;
 
 const styles = StyleSheet.create({
